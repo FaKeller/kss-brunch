@@ -1,5 +1,5 @@
 {
-  "name": "kss-brunch",
+  "name": "kssbrunch",
   "version": "0.0.1",
   "description": "Integrate kss-node into your brunch builds",
   "author": "Fabian Keller <contact@fabian-keller.de>",

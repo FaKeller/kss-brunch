@@ -1,4 +1,4 @@
-# kss-brunch
+# KSS ♥ brunch.io
 
 Integrates the [kss-node](https://github.com/kss-node/kss-node) living styleguide generator into your [brunch.io](http://brunch.io/) builds.
 
@@ -7,7 +7,7 @@ The plugin will generate the KSS node styleguide into `<public>/styleguide`.
 
 ## Usage
 
-Install the plugin via npm with `npm install --save-dev kss-brunch` or `yarn add kss-brunch -D`.
+Install the plugin via npm with `npm install --save-dev kssbrunch` or `yarn add kssbrunch -D`.
 
 
 ## Options
