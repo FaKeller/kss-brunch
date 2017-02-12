@@ -1,6 +1,6 @@
 'use strict';
 
-let kss = require('kss'),
+const kss = require('kss'),
     _ = require('lodash'),
     fs = require('fs');
 
@@ -11,7 +11,7 @@ const DEFAULT_OPTIONS = {
     addJsFiles: true,
 
     /** options that are passed to kss-node */
-    kssConfig: {}
+    kssConfig: {},
 };
 
 class KssPlugin {
@@ -25,8 +25,8 @@ class KssPlugin {
             sourceDestination = {
                 kssConfig: {
                     source: _.filter(config.paths.watched, path => fs.existsSync(path)),
-                    destination: `${config.paths.public}/styleguide`
-                }
+                    destination: `${config.paths.public}/styleguide`,
+                },
             };
         }
         this.config = _.defaultsDeep(config.plugins.kss || {}, sourceDestination, DEFAULT_OPTIONS);
@@ -36,19 +36,19 @@ class KssPlugin {
      * Brunch Hook after everything has compiled.
      */
     onCompile(files) {
-        console.log("Generating living styleguide");
-        let actualConfig = _.cloneDeep(this.config.kssConfig);
+        console.log('Generating living styleguide');
+        const actualConfig = _.cloneDeep(this.config.kssConfig);
 
         if (this.config.addCssFiles) {
-            let cssFiles = _(files)
-                .filter(file => file.type == 'stylesheet')
+            const cssFiles = _(files)
+                .filter(file => file.type === 'stylesheet')
                 .map(sf => sf.path)
                 .value();
             actualConfig.css = (actualConfig.css || []).concat(cssFiles);
         }
         if (this.config.addJsFiles) {
-            let jsFiles = _(files)
-                .filter(file => file.type == 'javascript')
+            const jsFiles = _(files)
+                .filter(file => file.type === 'javascript')
                 .map(sf => sf.path)
                 .value();
             actualConfig.js = (actualConfig.js || []).concat(jsFiles);

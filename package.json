@@ -11,7 +11,7 @@
     "url": "git@github.com:FaKeller/kss-brunch.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "eslint src/index.js && mocha"
   },
   "dependencies": {
     "kss": "^3.0.0-beta.17",
