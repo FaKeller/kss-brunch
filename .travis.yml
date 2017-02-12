@@ -1,5 +1,13 @@
 language: node_js
 node_js:
-  - 'node'
-  - '6'
-  - '4'
+- node
+- '6'
+- '4'
+deploy:
+  provider: npm
+  email: contact@fabian-keller.de
+  api_key:
+    secure: j6BbthKTsdTBqFYa+OnXEd22UdSfH7P+/FkUoTYrwbPOI+WAlPMOR55rKwYz3GRI0WzRDE0mWkOvWS428cflTc4tILvEx1U1bshTsw8JY0+FQymfCv5N/p0j0d0YF3JCHLUmIJwGAY0j9vtu3wwdl+vkOa3rIFaFkPSXceCTcHPGX3mIueSwIgVfEUNzU+7zQZvMCEgmSGNMYvM8h2t7v6jhlDtIFyWUr7VMZbYckp9I5kkmDx74jkAQZS6XKFaLAP5/Xukp9sAij/31hGTZLM9ihF56mdTuinvY8LNrv6J6yaElY8LOcK5VGyZJOG857yeOqLpM7G9sa0/VdNTge241ILMhn9odHsRiZgHiW+eCMuxje6ZI8QAiA+iVui1ovp93lkz0c87T86KLP/0Zf0tZUXlrySN+NERDoa7tlgRJwZP/qByuhjjOoib4X7GgbEC+UzGgHwEQhXfF0OS82ccOLE0bhe46kYxHs5FM6cvHVtJtevE+lnptl3wvAeAGv9J8+jigWIOOT8LN3E6kBuxTEHSJQHgPExKraSj1ddeasttWne1NCf/EXGERnvzdXZdynATZ0MsmqFQTXe0s+ZlM5Cm94cauv5+VMp9znCUWVQkXUDk4REdu5VtQ6Oke7WTVPpv+/GHkOpKgT9UZL2Fvo9aP11yMnsQt6NoetkU=
+  on:
+    tags: true
+    repo: FaKeller/kss-brunch
