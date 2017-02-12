@@ -5,5 +5,9 @@
   "main": "src/index.js",
   "repository": "git@github.com:FaKeller/kss-brunch.git",
   "author": "Fabian Keller <contact@fabian-keller.de>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "kss": "^3.0.0-beta.17",
+    "lodash": "^4.17.4"
+  }
 }
