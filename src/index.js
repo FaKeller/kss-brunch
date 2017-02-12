@@ -18,6 +18,7 @@ class KssPlugin {
 
   constructor(config) {
     config = config || {plugins: {kss: {}}};
+    this.brunchConfig = config;
     let sourceDestination;
     if (_.isNil(config.paths)) {
       sourceDestination = {};
@@ -30,6 +31,10 @@ class KssPlugin {
       };
     }
     this.config = _.defaultsDeep(config.plugins.kss || {}, sourceDestination, DEFAULT_OPTIONS);
+
+    const kssConfig = this.config.kssConfig || [];
+    this.css = kssConfig.css || [];
+    this.js = kssConfig.js || [];
   }
 
   /**
@@ -42,18 +47,20 @@ class KssPlugin {
     if (this.config.addCssFiles) {
       const cssFiles = _(files)
         .filter(file => file.type === 'stylesheet')
-        .map(sf => sf.path)
+        .map(sf => sf.path.replace(`${this.brunchConfig.paths.public}/`, ''))
         .value();
-      actualConfig.css = (actualConfig.css || []).concat(cssFiles);
+      this.css = _.uniq([].concat(this.css, cssFiles));
     }
     if (this.config.addJsFiles) {
       const jsFiles = _(files)
         .filter(file => file.type === 'javascript')
-        .map(sf => sf.path)
+        .map(sf => sf.path.replace(`${this.brunchConfig.paths.public}/`, ''))
         .value();
-      actualConfig.js = (actualConfig.js || []).concat(jsFiles);
+      this.js = _.uniq([].concat(this.js, jsFiles));
     }
 
+    actualConfig.css = this.css;
+    actualConfig.js = this.js;
     return kss(actualConfig);
   }
 }
