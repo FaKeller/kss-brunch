@@ -8,7 +8,12 @@ This file keeps track of all changes to this project. This project follows [sema
 ## [UNRELEASED]
 
 
-## v0.0.1 - 2016-10-11
+## v0.0.2 - 2017-02-12
+
+No functional changes, updating CD pipeline.
+
+
+## v0.0.1 - 2017-02-12
 
 ### Added
 - Initial release
