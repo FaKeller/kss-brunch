@@ -17,17 +17,19 @@ const DEFAULT_OPTIONS = {
 class KssPlugin {
 
     constructor(config) {
-        this.brunchConfig = config;
-        this.kssConfig = _.defaultsDeep(
-            config.plugins.kss || {},
-            {
+        config = config || {plugins: {kss: {}}};
+        let sourceDestination;
+        if (_.isNil(config.paths)) {
+            sourceDestination = {};
+        } else {
+            sourceDestination = {
                 kssConfig: {
-                    source: _.filter(this.brunchConfig.paths.watched, path => fs.existsSync(path)),
-                    destination: `${this.brunchConfig.paths.public}/styleguide`
+                    source: _.filter(config.paths.watched, path => fs.existsSync(path)),
+                    destination: `${config.paths.public}/styleguide`
                 }
-            },
-            DEFAULT_OPTIONS
-        );
+            };
+        }
+        this.config = _.defaultsDeep(config.plugins.kss || {}, sourceDestination, DEFAULT_OPTIONS);
     }
 
     /**
@@ -35,16 +37,16 @@ class KssPlugin {
      */
     onCompile(files) {
         console.log("Generating living styleguide");
-        let actualConfig = _.cloneDeep(this.kssConfig.kssConfig);
+        let actualConfig = _.cloneDeep(this.config.kssConfig);
 
-        if (this.kssConfig.addCssFiles) {
+        if (this.config.addCssFiles) {
             let cssFiles = _(files)
                 .filter(file => file.type == 'stylesheet')
                 .map(sf => sf.path)
                 .value();
             actualConfig.css = (actualConfig.css || []).concat(cssFiles);
         }
-        if (this.kssConfig.addJsFiles) {
+        if (this.config.addJsFiles) {
             let jsFiles = _(files)
                 .filter(file => file.type == 'javascript')
                 .map(sf => sf.path)
