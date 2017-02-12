@@ -1,5 +1,9 @@
 # KSS ♥ brunch.io
 
+[![npm](https://img.shields.io/npm/v/kssbrunch.svg)](https://www.npmjs.com/package/kssbrunch)
+[![Travis](https://img.shields.io/travis/FaKeller/kss-brunch.svg)](https://github.com/FaKeller/kss-brunch)
+[![npm](https://img.shields.io/npm/l/kssbrunch.svg)](https://www.npmjs.com/package/kssbrunch)
+
 Integrates the [kss-node](https://github.com/kss-node/kss-node) living styleguide generator into your [brunch.io](http://brunch.io/) builds.
 
 The plugin will generate the KSS node styleguide into `<public>/styleguide`.
