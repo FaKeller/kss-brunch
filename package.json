@@ -1,0 +1,9 @@
+{
+  "name": "kss-brunch",
+  "version": "0.0.1",
+  "description": "Integrate kss-node into your brunch builds",
+  "main": "src/index.js",
+  "repository": "git@github.com:FaKeller/kss-brunch.git",
+  "author": "Fabian Keller <contact@fabian-keller.de>",
+  "license": "MIT"
+}
