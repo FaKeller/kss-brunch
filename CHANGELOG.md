@@ -7,6 +7,9 @@ This file keeps track of all changes to this project. This project follows [sema
 
 ## [UNRELEASED]
 
+### Fixed
+- Automatic addition of CSS/JS files for incremental builds has been fixed. 
+
 
 ## v0.0.2 - 2017-02-12
 
