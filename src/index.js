@@ -45,23 +45,34 @@ class KssPlugin {
     const actualConfig = _.cloneDeep(this.config.kssConfig);
 
     if (this.config.addCssFiles) {
-      const cssFiles = _(files)
-        .filter(file => file.type === 'stylesheet')
-        .map(sf => sf.path.replace(`${this.brunchConfig.paths.public}/`, ''))
-        .value();
-      this.css = _.uniq([].concat(this.css, cssFiles));
+      this.css = this.handleGeneratedFiles('stylesheet', files, this.css);
     }
     if (this.config.addJsFiles) {
-      const jsFiles = _(files)
-        .filter(file => file.type === 'javascript')
-        .map(sf => sf.path.replace(`${this.brunchConfig.paths.public}/`, ''))
-        .value();
-      this.js = _.uniq([].concat(this.js, jsFiles));
+      this.js = this.handleGeneratedFiles('javascript', files, this.js);
     }
 
     actualConfig.css = this.css;
     actualConfig.js = this.js;
     return kss(actualConfig);
+  }
+
+  /**
+   * Expects a bunch of files
+   */
+  handleGeneratedFiles(type, generatedFiles, existingFiles) {
+    const changed = _(generatedFiles)
+      // find all generated files of certain type
+      .filter(file => file.type === type)
+      // remove any prefixing public path
+      .map(file => file.path.replace(`${this.brunchConfig.paths.public}/`, ''))
+      .value();
+    return _(existingFiles)
+      // merge with existing files
+      .concat(changed)
+      .uniq()
+      // keep only those that do exist
+      .filter(path => fs.existsSync(`${this.brunchConfig.paths.public}/${path}`))
+      .value();
   }
 }
 
