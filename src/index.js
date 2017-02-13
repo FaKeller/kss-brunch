@@ -18,6 +18,7 @@ class KssPlugin {
 
   constructor(config) {
     config = config || {plugins: {kss: {}}};
+    this.brunchConfig = config;
     let sourceDestination;
     if (_.isNil(config.paths)) {
       sourceDestination = {};
@@ -30,6 +31,10 @@ class KssPlugin {
       };
     }
     this.config = _.defaultsDeep(config.plugins.kss || {}, sourceDestination, DEFAULT_OPTIONS);
+
+    const kssConfig = this.config.kssConfig || [];
+    this.css = kssConfig.css || [];
+    this.js = kssConfig.js || [];
   }
 
   /**
@@ -40,21 +45,34 @@ class KssPlugin {
     const actualConfig = _.cloneDeep(this.config.kssConfig);
 
     if (this.config.addCssFiles) {
-      const cssFiles = _(files)
-        .filter(file => file.type === 'stylesheet')
-        .map(sf => sf.path)
-        .value();
-      actualConfig.css = (actualConfig.css || []).concat(cssFiles);
+      this.css = this.handleGeneratedFiles('stylesheet', files, this.css);
     }
     if (this.config.addJsFiles) {
-      const jsFiles = _(files)
-        .filter(file => file.type === 'javascript')
-        .map(sf => sf.path)
-        .value();
-      actualConfig.js = (actualConfig.js || []).concat(jsFiles);
+      this.js = this.handleGeneratedFiles('javascript', files, this.js);
     }
 
+    actualConfig.css = this.css;
+    actualConfig.js = this.js;
     return kss(actualConfig);
+  }
+
+  /**
+   * Expects a bunch of files
+   */
+  handleGeneratedFiles(type, generatedFiles, existingFiles) {
+    const changed = _(generatedFiles)
+      // find all generated files of certain type
+      .filter(file => file.type === type)
+      // remove any prefixing public path
+      .map(file => file.path.replace(`${this.brunchConfig.paths.public}/`, ''))
+      .value();
+    return _(existingFiles)
+      // merge with existing files
+      .concat(changed)
+      .uniq()
+      // keep only those that do exist
+      .filter(path => fs.existsSync(`${this.brunchConfig.paths.public}/${path}`))
+      .value();
   }
 }
 

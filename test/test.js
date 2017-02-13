@@ -23,14 +23,18 @@ describe('KssPlugin', () => {
   let gJS = (path) => {
     return {
       type: 'javascript',
-      path: path
+      path: `${TEST_PLUGIN_DEFAULT_OPTIONS.paths.public}/${path}`
     }
   }, gCSS = (path) => {
     return {
       type: 'stylesheet',
-      path: path
+      path: `${TEST_PLUGIN_DEFAULT_OPTIONS.paths.public}/${path}`
     }
   };
+
+  beforeEach(() => {
+    fsStub.existsSync = () => true;
+  });
 
   it("should create the plugin without any options", () => {
     const plugin = new KssPlugin();
@@ -113,5 +117,40 @@ describe('KssPlugin', () => {
     return plugin.onCompile(generatedFiles).then(kssConfig => {
       expect(kssConfig.homepage).to.equal("styleguide.md");
     });
+  });
+
+  it("should add all generated CSS/JS files to files configured in kssConfig options for incremental, partial updates", () => {
+    const plugin = new KssPlugin(TEST_PLUGIN_DEFAULT_OPTIONS);
+
+    return plugin.onCompile([gJS('one.js'), gCSS('one.css'), gJS('two.js')])
+      .then(kssConfig => {
+        expect(kssConfig.css).to.eql(['one.css']);
+        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+
+        // now incrementally only compile one file
+        return plugin.onCompile([gCSS('one.css')])
+      }).then(kssConfig => {
+        expect(kssConfig.css).to.eql(['one.css']);
+        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+
+        // now incrementally compile new file
+        return plugin.onCompile([gCSS('one.css'), gCSS('two.css')])
+      }).then(kssConfig => {
+        expect(kssConfig.css).to.eql(['one.css', 'two.css']);
+        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+
+        // now incrementally compile no file
+        return plugin.onCompile([])
+      }).then(kssConfig => {
+        expect(kssConfig.css).to.eql(['one.css', 'two.css']);
+        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+
+        // now mark a file as non-existing and compile again
+        fsStub.existsSync = (file) => -1 === file.indexOf('one.css');
+        return plugin.onCompile([gJS('two.js')])
+      }).then(kssConfig => {
+        expect(kssConfig.css).to.eql(['two.css']);
+        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+      });
   });
 });
