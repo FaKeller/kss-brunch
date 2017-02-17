@@ -56,6 +56,14 @@ describe('KssPlugin', () => {
     });
   });
 
+  it("should not trigger kss if config.enabled is false", () => {
+    const plugin = new KssPlugin(_.defaultsDeep({
+      plugins: {kss: {enabled: false}}
+    }, TEST_PLUGIN_DEFAULT_OPTIONS));
+
+    expect(plugin.onCompile([])).to.be.undefined;
+  });
+
   it("should automatically add generated JS/CSS files to kss config", () => {
     const plugin = new KssPlugin(TEST_PLUGIN_DEFAULT_OPTIONS);
 
