@@ -7,6 +7,12 @@ This file keeps track of all changes to this project. This project follows [sema
 
 ## [UNRELEASED]
 
+### Added
+- Config setting `config.plugins.kss.enabled` to turn the style guide generation on (true) or off (false).
+
+### Fixed
+- Asset URL handling for browser-sync-brunch. 
+
 
 ## v0.0.3 - 2017-02-13
 
