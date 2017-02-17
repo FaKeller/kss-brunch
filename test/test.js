@@ -61,8 +61,8 @@ describe('KssPlugin', () => {
 
     const generatedFiles = [gJS('one.js'), gCSS('one.css'), gJS('two.js')];
     return plugin.onCompile(generatedFiles).then(kssConfig => {
-      expect(kssConfig.css).to.eql(['one.css']);
-      expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+      expect(kssConfig.css).to.eql(['/one.css']);
+      expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
     });
   });
 
@@ -97,8 +97,8 @@ describe('KssPlugin', () => {
 
     const generatedFiles = [gJS('one.js'), gCSS('one.css'), gJS('two.js')];
     return plugin.onCompile(generatedFiles).then(kssConfig => {
-      expect(kssConfig.css).to.eql(['config.css', 'one.css']);
-      expect(kssConfig.js).to.eql(['config.js', 'one.js', 'two.js']);
+      expect(kssConfig.css).to.eql(['/config.css', '/one.css']);
+      expect(kssConfig.js).to.eql(['/config.js', '/one.js', '/two.js']);
     });
   });
 
@@ -124,33 +124,33 @@ describe('KssPlugin', () => {
 
     return plugin.onCompile([gJS('one.js'), gCSS('one.css'), gJS('two.js')])
       .then(kssConfig => {
-        expect(kssConfig.css).to.eql(['one.css']);
-        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+        expect(kssConfig.css).to.eql(['/one.css']);
+        expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
 
         // now incrementally only compile one file
         return plugin.onCompile([gCSS('one.css')])
       }).then(kssConfig => {
-        expect(kssConfig.css).to.eql(['one.css']);
-        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+        expect(kssConfig.css).to.eql(['/one.css']);
+        expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
 
         // now incrementally compile new file
         return plugin.onCompile([gCSS('one.css'), gCSS('two.css')])
       }).then(kssConfig => {
-        expect(kssConfig.css).to.eql(['one.css', 'two.css']);
-        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+        expect(kssConfig.css).to.eql(['/one.css', '/two.css']);
+        expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
 
         // now incrementally compile no file
         return plugin.onCompile([])
       }).then(kssConfig => {
-        expect(kssConfig.css).to.eql(['one.css', 'two.css']);
-        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+        expect(kssConfig.css).to.eql(['/one.css', '/two.css']);
+        expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
 
         // now mark a file as non-existing and compile again
         fsStub.existsSync = (file) => -1 === file.indexOf('one.css');
         return plugin.onCompile([gJS('two.js')])
       }).then(kssConfig => {
-        expect(kssConfig.css).to.eql(['two.css']);
-        expect(kssConfig.js).to.eql(['one.js', 'two.js']);
+        expect(kssConfig.css).to.eql(['/two.css']);
+        expect(kssConfig.js).to.eql(['/one.js', '/two.js']);
       });
   });
 });
