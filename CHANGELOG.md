@@ -7,6 +7,9 @@ This file keeps track of all changes to this project. This project follows [sema
 
 ## [UNRELEASED]
 
+
+## v0.0.4 - 2017-02-21
+
 ### Added
 - Config setting `config.plugins.kss.enabled` to turn the style guide generation on (true) or off (false).
 
