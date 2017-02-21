@@ -5,6 +5,11 @@ const kss = require('kss'),
   fs = require('fs');
 
 const DEFAULT_OPTIONS = {
+  /** True (default) to turn on styleguide generation. */
+  enabled: true,
+  /** the name of the folder to write the styleguide to */
+  styleguideFolder: 'styleguide',
+
   /** include generated CSS files in the KSS styleguide */
   addCssFiles: true,
   /** include generated CSS files in the KSS styleguide */
@@ -16,31 +21,33 @@ const DEFAULT_OPTIONS = {
 
 class KssPlugin {
 
-  constructor(config) {
-    config = config || {plugins: {kss: {}}};
-    this.brunchConfig = config;
+  constructor(brunchConfig) {
+    brunchConfig = brunchConfig || {plugins: {kss: {}}};
+    this.brunchConfig = brunchConfig;
+    this.config = _.defaultsDeep(brunchConfig.plugins.kss || {}, DEFAULT_OPTIONS);
+
     let sourceDestination;
-    if (_.isNil(config.paths)) {
+    if (_.isNil(brunchConfig.paths)) {
       sourceDestination = {};
     } else {
       sourceDestination = {
-        kssConfig: {
-          source: _.filter(config.paths.watched, path => fs.existsSync(path)),
-          destination: `${config.paths.public}/styleguide`,
-        },
+        source: _.filter(brunchConfig.paths.watched, path => fs.existsSync(path)),
+        destination: `${brunchConfig.paths.public}/${this.config.styleguideFolder}`,
       };
     }
-    this.config = _.defaultsDeep(config.plugins.kss || {}, sourceDestination, DEFAULT_OPTIONS);
 
-    const kssConfig = this.config.kssConfig || [];
-    this.css = kssConfig.css || [];
-    this.js = kssConfig.js || [];
+    this.kssConfig = _.defaults(this.config.kssConfig || {}, sourceDestination);
+    this.css = this.kssConfig.css || [];
+    this.js = this.kssConfig.js || [];
   }
 
   /**
    * Brunch Hook after everything has compiled.
    */
   onCompile(files) {
+    if (!this.config.enabled) {
+      return;
+    }
     console.log('Generating living styleguide');
     const actualConfig = _.cloneDeep(this.config.kssConfig);
 
@@ -64,7 +71,7 @@ class KssPlugin {
       // find all generated files of certain type
       .filter(file => file.type === type)
       // remove any prefixing public path
-      .map(file => file.path.replace(`${this.brunchConfig.paths.public}/`, ''))
+      .map(file => file.path.replace(`${this.brunchConfig.paths.public}/`, '/'))
       .value();
     return _(existingFiles)
       // merge with existing files
@@ -72,6 +79,7 @@ class KssPlugin {
       .uniq()
       // keep only those that do exist
       .filter(path => fs.existsSync(`${this.brunchConfig.paths.public}/${path}`))
+      .map(path => '/' + path.replace(/^\/+/, ''))
       .value();
   }
 }
