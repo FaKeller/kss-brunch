@@ -7,6 +7,9 @@ This file keeps track of all changes to this project. This project follows [sema
 
 ## [UNRELEASED]
 
+### Changed
+- Updated to `kss-node@3.0.0-beta.18`
+
 
 ## v0.0.5 - 2017-02-21
 
