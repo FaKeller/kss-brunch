@@ -1,6 +1,6 @@
 {
   "name": "kssbrunch",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Integrate kss-node into your brunch builds",
   "author": "Fabian Keller <contact@fabian-keller.de>",
   "homepage": "https://github.com/FaKeller/kss-brunch",
